@@ -8,6 +8,8 @@
             "email": "gabor87@outlook.com"
         }
     ],
+	"minimum-stability": "dev",
+	"prefer-stable": true,
     "require": {
 		"yiisoft/yii2": "^2.0.13"
 	}
