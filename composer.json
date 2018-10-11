@@ -1,0 +1,12 @@
+{
+    "name": "codeheadco/gotools",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Varga Gábor",
+            "email": "gabor87@outlook.com"
+        }
+    ],
+    "require": {}
+}
