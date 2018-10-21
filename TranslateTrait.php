@@ -2,6 +2,8 @@
 
 namespace codeheadco\tools;
 
+use Yii;
+
 /**
  * Description of TranslateTrait
  *
@@ -12,7 +14,7 @@ trait TranslateTrait
     
     public static function t($message, $params = [], $language = null)
     {
-        return \Yii::t(static::getTranslationCategory(), $message, $params, $language);
+        return Yii::t(static::getTranslationCategory(), $message, $params, $language);
     }
     
     public static function tSource($message, $params = [])
