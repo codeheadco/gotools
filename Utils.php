@@ -1,6 +1,6 @@
 <?php
 
-namespace app\components;
+namespace codeheadco\gotools;
 
 /**
  * Description of Utils
