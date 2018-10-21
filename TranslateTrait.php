@@ -1,6 +1,6 @@
 <?php
 
-namespace codeheadco\gotools;
+namespace codeheadco\tools;
 
 /**
  * Description of TranslateTrait
