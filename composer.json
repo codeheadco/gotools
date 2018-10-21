@@ -12,5 +12,10 @@
 	"prefer-stable": true,
     "require": {
 		"yiisoft/yii2": "^2.0.13"
-	}
+	},
+	"autoload": {
+        "psr-4": {
+            "codeheadco\\tools\\": ""
+        }
+    }
 }
