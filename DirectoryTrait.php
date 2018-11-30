@@ -7,15 +7,17 @@ namespace codeheadco\tools;
  *
  * @author Varga Gábor <gabor87@outlook.com>
  */
-trait DirectoryTrait {
-    
+trait DirectoryTrait
+{
+
     protected $directoryPath;
 
     /**
      * 
      * @return DirectoryPath
      */
-    public function getDirectoryPath($create = true) {
+    public function getDirectoryPath($create = true)
+    {
         if (!$this->directoryPath) {
             $path = strtolower(static::classShortName());
 
@@ -25,28 +27,30 @@ trait DirectoryTrait {
 
             $this->directoryPath = new DirectoryPath($path);
         }
-        
+
         if ($create) {
             $this->directoryPath->ensure();
         }
-        
+
         return $this->directoryPath;
     }
-    
+
     /**
      * 
      * @return string
      */
-    public function getPath() {
+    public function getPath()
+    {
         return $this->getDirectoryPath(true)->getPath();
     }
-    
+
     /**
      * 
      * @return string
      */
-    public function getWebPath() {
+    public function getWebPath()
+    {
         return $this->getDirectoryPath(true)->getWebPath();
     }
-    
+
 }
