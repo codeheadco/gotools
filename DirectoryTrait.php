@@ -25,7 +25,7 @@ trait DirectoryTrait
                 $path .= '/' . join('_', $this->getPrimaryKey(true));
             }
 
-            $this->directoryPath = new DirectoryPath($path);
+            $this->directoryPath = new DirectoryPath("/{$path}");
         }
 
         if ($create) {
