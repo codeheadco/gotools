@@ -43,7 +43,7 @@ class DirectoryPath
 
     public function getPath()
     {
-        return $this->path;
+        return $this->_path;
     }
 
     public function __toString()
