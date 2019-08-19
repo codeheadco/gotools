@@ -28,7 +28,7 @@ class TmpFile extends File
         $uploadsPath = Yii::getAlias('@uploads');
         FileHelper::createDirectory($uploadsPath);
         
-        $directoryPath = new DirectoryPath(["/{$date}", null], $uploadsPath);
+        $directoryPath = new DirectoryPath("/{$date}", $uploadsPath);
         $directoryPath->ensure();
         
         return $directoryPath;
