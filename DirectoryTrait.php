@@ -44,13 +44,4 @@ trait DirectoryTrait
         return $this->getDirectoryPath(true)->getPath();
     }
 
-    /**
-     * 
-     * @return string
-     */
-    public function getWebPath()
-    {
-        return $this->getDirectoryPath(true)->getWebPath();
-    }
-
 }

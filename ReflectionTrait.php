@@ -34,5 +34,10 @@ trait ReflectionTrait
     {
         return Utils::listProperties(get_called_class(), $classFilter, $onlyNames);
     }
+    
+    public static function getAlias($name, $prefix = '')
+    {
+        return Utils::getClassByAlias(get_called_class(), $name, $prefix);
+    }
 
 }
