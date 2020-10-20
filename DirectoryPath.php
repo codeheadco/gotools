@@ -75,7 +75,7 @@ class DirectoryPath
 
     public function getPath()
     {
-        return $this->_path;
+        return $this->path;
     }
 
     public function getWebPath()
