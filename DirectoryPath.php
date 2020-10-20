@@ -3,8 +3,6 @@
 namespace codeheadco\tools;
 
 use Yii;
-use yii\helpers\FileHelper;
-use yii\base\ErrorHandler;
 
 /**
  * Description of DirectoryPath
@@ -16,29 +14,63 @@ class DirectoryPath
 
     /**
      *
+     * @var DirectoryPath|string
+     */
+    protected $parent;
+
+    /**
+     *
      * @var string 
      */
-    private $_path = '';
+    protected $path;
+
+    /**
+     *
+     * @var string 
+     */
+    protected $webPath;
 
     /**
      * 
      * @param type $path
-     * @param DirectoryPath|string $parent
+     * @param type $webPath
+     * @param \gglobal\components\DirectoryPath $parent
      */
     public function __construct($path, $parent = null)
     {
-        if (null !== $parent) {
-            if ($parent instanceof DirectoryInterface) {
-                $parent = $parent->getDirectoryPath();
-            }
-            
-            /* @var $parent DirectoryPath */
-            $this->_path = $parent instanceof DirectoryPath 
-                            ? $parent->getPath() 
-                            : $parent;
+        $this->parent = $parent;
+
+        if (is_array($path)) {
+            list($realPath, $webPath) = $path;
+        } else {
+            $webPath = $realPath = $path;
         }
-        
-        $this->_path .= $path;
+
+        if ($this->parent instanceof DirectoryPath) {
+            $this->path = $parent->getPath() . $realPath;
+
+            if ($webPath) {
+                $this->webPath = $parent->getWebPath() . $webPath;
+            }
+        } elseif (null !== $this->parent) {
+            if (is_array($this->parent)) {
+                list($parentRealPath, $parentWebPath) = $this->parent;
+            } else {
+                $parentRealPath = $parentWebPath = $parent;
+            }
+
+            $this->path = $parentRealPath . $realPath;
+
+            if ($webPath) {
+                $this->webPath = $parentWebPath . $webPath;
+            }
+        } else {
+            $this->path = Yii::getAlias('@files') . $realPath;
+
+            if ($webPath) {
+                $this->webPath = '/files' . $webPath;
+            }
+        }
     }
 
     public function getPath()
@@ -46,87 +78,55 @@ class DirectoryPath
         return $this->_path;
     }
 
-    public function __toString()
+    public function getWebPath()
     {
-        try {
-            return $this->getPath();
-        } catch (\Exception $e) {
-            ErrorHandler::convertExceptionToError($e);
-            return '';
+        if (null === $this->webPath) {
+            throw new \yii\base\InvalidCallException();
         }
+
+        return $this->webPath;
     }
 
     public function exists()
     {
-        return file_exists($this->_path) && is_dir($this->_path);
+        return file_exists($this->path);
     }
 
     public function ensure()
     {
-        if (!$this->exists()) {
-            FileHelper::createDirectory($this->getPath());
-        }
-        
-        return $this;
+        return \yii\helpers\FileHelper::createDirectory($this->path);
     }
-    
-    public function listFiles($options = [])
-    {
-        return FileHelper::findFiles($this->getPath(), $options);
-    }
-    
-    public function listDirectories($options = [])
-    {
-        return FileHelper::findDirectories($this->getPath(), $options);
-    }
-    
+
     public function remove()
     {
-        return FileHelper::removeDirectory($this->getPath());
-    }
-    
-    public function removeFile($fileName)
-    {
-        if ($this->fileExists($fileName)) {
-            return @unlink($this->getPath() . DIRECTORY_SEPARATOR . $fileName);
-        }
-        
-        return false;
+        return \yii\helpers\FileHelper::removeDirectory($this->path);
     }
 
     public function fileExists($fileName)
     {
-        return file_exists($this->getPath() . DIRECTORY_SEPARATOR . $fileName);
+        return file_exists("{$this->path}/{$fileName}");
     }
 
-    public function copyInto($pathFrom, $newName = null)
+    public function copyInto($pathFrom)
     {
         $pathFromPI = pathinfo($pathFrom);
-        
-        if (null === $newName) {
-            $newName = $pathFromPI['basename'];
-        } else {
-            $newName .= ".{$pathFromPI['extension']}";
-        }
 
         if (is_dir($pathFrom)) {
-            return FileHelper::copyDirectory($pathFrom, "{$this->getPath()}/{$newName}");
+            return \yii\helpers\FileHelper::copyDirectory($pathFrom, "{$this->path}/{$pathFromPI['filename']}");
         }
 
-        return copy($pathFrom, "{$this->getPath()}/{$newName}");
+        return copy($pathFrom, "{$this->path}/{$pathFromPI['filename']}.{$pathFromPI['extension']}");
     }
 
-    public function moveInto($pathFrom, $newName = null)
+    public function moveInto($pathFrom)
     {
         $pathFromPI = pathinfo($pathFrom);
-        
-        if (null === $newName) {
-            $newName = $pathFromPI['basename'];
-        } else {
-            $newName .= ".{$pathFromPI['extension']}";
+
+        if (is_file($pathFrom)) {
+            return rename($pathFrom, "{$this->path}/{$pathFromPI['filename']}");
         }
-        
-        return rename($pathFrom, "{$this->getPath()}/{$newName}");
+
+        return rename($pathFrom, "{$this->path}/{$pathFromPI['filename']}");
     }
 
 }
